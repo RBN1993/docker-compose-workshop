@@ -1,0 +1,4 @@
+{
+    "apiDogs": "http://localhost:3000",
+    "apiChuck": "http://localhost:3001"
+}

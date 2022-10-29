@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  devops-app:
+    build:
+      context: devops-app
+      dockerfile: Dockerfile
+    ports:
+      - "3001:8080"
+  devops-web:
+    build:
+      context: devops-web
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+  devops-db-app:
+    build: 
+      context: devops-db-app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_PASSWORD=${MYSQL_PASSWORD}
+      - DATABASE_HOST=db
+      - DATABASE_PORT=3306
+      - DATABASE_USERNAME=devops
+      - DATABASE_NAME=devops
+  db:
+    image: mysql:5.7.39
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: devops
+      MYSQL_USER: devops
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+volumes:
+  db_data:
