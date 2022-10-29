@@ -11,7 +11,7 @@ services:
       context: devops-web
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "8080:8080"
   devops-db-app:
     build: 
       context: devops-db-app
