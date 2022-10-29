@@ -98,4 +98,4 @@ MYSQL_PASSWORD=wordpress
 ## Tips
 
 - No usar las etiquetas **hostname** ni **container_name**, ya que producen colisiones con otros docker-compose que tengan los mismos nombre de servicio.
-- Usar name como etiqueta principal para darle un nombre significativo a todo el stack
+- Usar la etiqueta **name** para darle un nombre significativo a todo el stack y evitar colisiones de nombres sin tener que modificar el nombre de los servicios.
