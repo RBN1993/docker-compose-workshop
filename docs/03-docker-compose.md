@@ -63,7 +63,7 @@ MYSQL_PASSWORD=wordpress
 
 ## Etiquetas básicas
 
-version**: indica la versión de la especificación de docker-compose que se quiere utilizar
+**version**: indica la versión de la especificación de docker-compose que se quiere utilizar
 
 **name**: permite definir un nombre que se usará como prefijo de los identificadores de los contenedores, las redes y los volúmenes.
 
@@ -87,7 +87,7 @@ version**: indica la versión de la especificación de docker-compose que se qui
 ### Comandos básicos
 
 * **$> docker-compose up -d [nombre_servicio]** → levanta todos los servicios, volúmenes y redes declarados, si no ponemos -d veremos el log de cada uno. Si se especifica un nombre de servicio solo se levanta ese.
-* **$> docker-compose up -d --build [nombre_servicio]**→ levanta todos los servicios, volúmenes y redes declarados, si no ponemos -d veremos el log de cada uno, con --build ejecuta los Dockerfiles de los servicios que tengan la sección build.
+* **$> docker-compose up -d --build [nombre_servicio]** → levanta todos los servicios, volúmenes y redes declarados, si no ponemos -d veremos el log de cada uno, con --build ejecuta los Dockerfiles de los servicios que tengan la sección build.
 * **$> docker-compose down -v** → para y elimina todos los contenedores, redes, imágenes y volúmenes declarados. No se puede aplicar a un solo servicio.
 * **$> docker-compose start | stop | restart [nombre_servicio]** → afectando a todos los servicios y contenedores asociados o solo el especificado
 * **$> docker-compose ps | images** → para ver el listado de procesos o imágenes asociados
@@ -97,5 +97,5 @@ version**: indica la versión de la especificación de docker-compose que se qui
 
 ## Tips
 
-- No usar las etiquetas hostname ni container_name, ya que producen colisiones con otros docker-compose que tengan los mismos nombre de servicio.
+- No usar las etiquetas **hostname** ni **container_name**, ya que producen colisiones con otros docker-compose que tengan los mismos nombre de servicio.
 - Usar name como etiqueta principal para darle un nombre significativo a todo el stack

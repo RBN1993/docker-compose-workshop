@@ -25,7 +25,7 @@ services:
       - DATABASE_USERNAME=devops
       - DATABASE_NAME=devops
   db:
-    image: mysql:5.7.39
+    image: mysql:5.7
     volumes:
       - db_data:/var/lib/mysql
     ports:

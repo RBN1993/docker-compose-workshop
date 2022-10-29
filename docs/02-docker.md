@@ -242,7 +242,7 @@ server {
 
 ### Construir la imagen y subirla al repositorio
 
-***Nota: Ejecutar en el directorio donde se almacena el fichero Dockerfile
+> **Nota**: Ejecutar en el directorio donde se almacena el fichero Dockerfile
 
 Una vez tenemos definida nuestra receta es el momento de contruir la imagen, para lo cual en el mismo ditectorio donde esté el fichero Dockerfile, vamos a ejecutar:
 
