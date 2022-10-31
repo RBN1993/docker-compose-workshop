@@ -234,8 +234,6 @@ server {
 
 ### Construir la imagen y subirla al repositorio
 
-> **Nota**: Ejecutar en el directorio donde se almacena el fichero Dockerfile
-
 Como ejemplo sencillo, vamos a crear dentro de nuestro directorio un fichero index.js con el siguiente contenido:
 
 ```javascript
@@ -254,7 +252,7 @@ WORKDIR /app
 CMD ["node","index.js"]
 ```
 
-Una vez tenemos definida nuestra receta es el momento de contruir la imagen, para lo cual en el mismo directorio donde esté el fichero Dockerfile, vamos a ejecutar:
+Una vez tenemos definida nuestra receta es el momento de contruir la imagen, para lo cual en el mismo directorio donde esté el fichero Dockerfile y el fichero index.js, vamos a ejecutar:
 
 ```bash
 docker build -t docker-workshop:1.0 .
