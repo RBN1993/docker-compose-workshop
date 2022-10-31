@@ -12,7 +12,7 @@ $> docker-compose -version
 
 ## Instalación y configuración en MacOs y Windows
 
-Ya viene al instalar Rancher Desktop.
+Ya viene al instalar [Rancher Desktop](https://rancherdesktop.io/).
 
 ## Funcionamiento
 
@@ -36,7 +36,7 @@ services:
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
   wordpress:
-    image: wordpress:latest
+    image: wordpress:5-php7.1-apache
     depends_on:
       - wdb
     ports:
@@ -46,12 +46,16 @@ services:
       - wordpress_config:/var/www/html
     environment:
       WORDPRESS_DB_HOST: wdb:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
 volumes:
   wordpress_data:
   wordpress_config:
 ```
-Lo más común para evitar introducir información sensible como contraseñas en los ficheros de docker compose, es hacer uso de un fichero .env que establezca las variables de entorno necesarias. Este fichero .env se coloca en el mismo directorio que el fichero docker-compose.yaml, no se sube al repositorio de git, y en su lugar se sube un fichero .env.example con el contenido válido para desarrollo.
+Lo más común para evitar introducir información sensible como contraseñas en los ficheros de docker compose, es hacer uso de un fichero .env que establezca las variables de entorno necesarias. 
+
+Este fichero .env se coloca en el mismo directorio que el fichero docker-compose.yaml, no se sube al repositorio de git, y en su lugar se sube un fichero .env.example con el contenido válido para desarrollo.
 
 El fichero .env del ejemplo anterior sería:
 
@@ -60,6 +64,24 @@ MYSQL_ROOT_PASSWORD=wordpress
 MYSQL_PASSWORD=wordpress
 ```
 ![stack wordpress](../imgs/docker-compose-wordpress.png)
+
+Ahora levantamos todos los servicios definidos con el comando:
+
+```bash
+docker-compose up -d
+```
+
+En caso de necesitar ver los logs podemos utilizar comando:
+
+```bash
+docker-compose logs -f
+```
+
+Y en caso de querer eliminar todo:
+
+```bash
+docker-compose down -v
+```
 
 ## Etiquetas básicas
 
@@ -76,9 +98,10 @@ MYSQL_PASSWORD=wordpress
     * **dockerfile:** se indica el nombre del fichero que contiene la declaración Dockerfile
   * **environment**: lista de variables de entorno que define el servicio
   * **depends_on**: lista de servicios que se tienen que ejecutar antes
-  * **ports**: lista de puertos que se quieren exponer “externo:interno”
+  * **ports**: lista de puertos que se quieren exponer "externo:interno"
   * **networks**: lista de redes donde va a estar nuestro servicio
-  * **volumes**: lista de volúmenes a mapear “path_externo o identificador:path_interno”
+  * **volumes**: lista de volúmenes a mapear "path_externo o identificador:path_interno"
+  * **restart**: indica cuando se tiene que reiniciar el contenedor. Si ponemos **always** siempre que el contenedor falle, se volverá a reiniciar.
 
 **volumes**: declaración de los volúmenes utilizados
 
@@ -90,7 +113,7 @@ MYSQL_PASSWORD=wordpress
 * **$> docker-compose up -d --build [nombre_servicio]** → levanta todos los servicios, volúmenes y redes declarados, si no ponemos -d veremos el log de cada uno, con --build ejecuta los Dockerfiles de los servicios que tengan la sección build.
 * **$> docker-compose down -v** → para y elimina todos los contenedores, redes, imágenes y volúmenes declarados. No se puede aplicar a un solo servicio.
 * **$> docker-compose start | stop | restart [nombre_servicio]** → afectando a todos los servicios y contenedores asociados o solo el especificado
-* **$> docker-compose ps | images** → para ver el listado de procesos o imágenes asociados
+* **$> docker-compose ps | images** → para ver el listado de procesos o imágenes asociadas
 * **$> docker-compose logs -f [nombre_servicio]** → para ver los logs asociados al contenedor
 
 * **$> docker-compose config** →  Obtenemos por pantalla el docker-compose que se va a ejecutar, con la visibilidad de las variables definidas con los valores adoptados.
