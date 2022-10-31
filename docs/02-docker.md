@@ -246,7 +246,7 @@ Para poder ejecutar este fichero de JavaScript del lado del servidor necesitamos
 
 ```dockerfile
 FROM alpine
-RUN apk update && apk adk nodejs
+RUN apk update && apk add nodejs
 COPY . /app
 WORKDIR /app
 CMD ["node","index.js"]
