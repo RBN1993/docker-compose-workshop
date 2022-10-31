@@ -1,4 +1,4 @@
-# Taller introducción a Docker y Docker-Compose
+# Taller iniciación a Docker y Docker-Compose
 
 ## Objetivo
 
