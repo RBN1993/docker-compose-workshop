@@ -35,11 +35,15 @@ $> docker run -it alpine /bin/sh
 $> docker run -it alpine comando
 ```
 
-#### Levantar un servidor web (nginx)
+#### Levantar un nuevo servidor web
 
 ```bash
 $> docker run -d -p "9876:80" -v "$PWD/www:/usr/share/nginx/html" nginx
 ```
+
+![image-20200318220250484](../imgs/puertos-volumenes-docker.png)
+
+> Nota: Los contenedores siempre tienen que tener dentro un proceso activo corriendo, en caso contrario se paran y dejan de dar servicio.
 
 #### Ver los contenedores que están corriendo
 
@@ -122,18 +126,6 @@ $> docker rm -f $(docker ps -a | grep Dead | cut -d ' ' -f 1)
 ```bash
 $> docker rmi $(docker images -q)
 ```
-
-### Puertos y volúmenes
-
-#### Levantar un nuevo servidor web
-
-```bash
-$> docker run -d -p "9876:80" -v "$PWD/www:/usr/share/nginx/html" nginx
-```
-
-![image-20200318220250484](../imgs/puertos-volumenes-docker.png)
-
-> Nota: Los contenedores siempre tienen que tener dentro un proceso activo corriendo, en caso contrario se paran y dejan de dar servicio.
 
 ### Dockerfile para la creación de imágenes
 
