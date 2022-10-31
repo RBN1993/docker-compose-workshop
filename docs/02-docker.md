@@ -20,25 +20,25 @@ Sea cual sea tu sistema operativo la forma más sencilla y legal de tenerlo es i
 #### Hacer un hello world
 
 ```bash
-$> docker run hello-world
+docker run hello-world
 ```
 
 #### Arrancar un contenedor y entrar dentro
 
 ```bash
-$> docker run -it alpine /bin/sh
+docker run -it alpine /bin/sh
 ```
 
 #### Ejecutar un comando dentro del contenedor
 
 ```bash
-$> docker run -it alpine comando
+docker run -it alpine comando
 ```
 
 #### Levantar un nuevo servidor web
 
 ```bash
-$> docker run -d -p "9876:80" -v "$PWD/www:/usr/share/nginx/html" nginx
+docker run -d -p "9876:80" -v "$PWD/www:/usr/share/nginx/html" nginx
 ```
 
 ![image-20200318220250484](../imgs/puertos-volumenes-docker.png)
@@ -48,13 +48,13 @@ $> docker run -d -p "9876:80" -v "$PWD/www:/usr/share/nginx/html" nginx
 #### Ver los contenedores que están corriendo
 
 ```bash
-$> docker ps [-a]
+docker ps [-a]
 ```
 
 #### Entrar dentro del contenedor activo con el servidor web
 
 ```bash
-$> docker exec -it id_contenedor /bin/bash
+docker exec -it id_contenedor /bin/bash
 ```
 
 Nota: acceder a /usr/share/nginx/html y añadir contenido
@@ -62,43 +62,43 @@ Nota: acceder a /usr/share/nginx/html y añadir contenido
 #### Parar un contenedor activo
 
 ```bash
-$> docker stop id_contenedor
+docker stop id_contenedor
 ```
 
 #### Arrancar un contenedor parado
 
 ```bash
-$> docker start id_contenedor
+docker start id_contenedor
 ```
 
 #### Matar un contenedor activo
 
 ```bash
-$> docker kill id_contenedor
+docker kill id_contenedor
 ```
 
 #### Eliminar un contenedor no activo
 
 ```bash
-$> docker rm id_contenedor
+docker rm id_contenedor
 ```
 
 #### Ver las imágenes almacenadas localmente
 
 ```bash
-$> docker images
+docker images
 ```
 
 #### Eliminar una imagen sin contenedores asociados
 
 ```bash
-$> docker rmi id_imagen
+docker rmi id_imagen
 ```
 
 #### Traer una imagen de un repositorio de Docker
 
 ```bash
-$> docker pull mysql:5.7
+docker pull mysql:5.7
 ```
 
 ### Comandos útiles
@@ -106,25 +106,25 @@ $> docker pull mysql:5.7
 #### Parar todos los contenedores
 
 ```bash
-$> docker stop $(docker ps -a -q)
-```
-
-#### Borrar todos los contenedores
-
-```bash
-$> docker rm $(docker ps -a -q)
+docker stop $(docker ps -a -q)
 ```
 
 #### Borrar los contenedores con un cierto estado
 
 ```bash
-$> docker rm -f $(docker ps -a | grep Dead | cut -d ' ' -f 1)
+docker rm -f $(docker ps -a | grep Dead | cut -d ' ' -f 1)
+```
+
+#### Borrar todos los contenedores
+
+```bash
+docker rm $(docker ps -a -q)
 ```
 
 #### Borrar todas las imágenes
 
 ```bash
-$> docker rmi $(docker images -q)
+docker rmi $(docker images -q)
 ```
 
 ### Dockerfile para la creación de imágenes
@@ -137,16 +137,16 @@ Es un fichero de texto que puede contener las siguientes sentencias.
 
 * **FROM:** define la imagen de la que se parte
 * **LABEL:** permite establecer una serie de etiquetas clave=valor que se mostrarán en el docker inspect. Ejemplo, LABEL maintainer=”devel@acme.com”
-* **COPY:** copia un archivo o directorio de la máquina dentro del contenedor utilizando los paths especificados en src y dest.
-* **ADD:** igual que COPY pero si el archivo está comprimido, al copiarlo lo descomprime.
+* **ENV:** permite definir variables de entorno que pueden ser utilizadas en el mismo Dockerfile y sobreescritas desde docker run con --env clave=’valor’. Se utiliza para definir versiones o paths que puedan cambiar de una construcción a otra.
+* **COPY src dest** copia un archivo o directorio de la máquina dentro del contenedor utilizando los paths especificados en src y dest.
+* **ADD src dest** igual que COPY pero si el archivo está comprimido, al copiarlo lo descomprime.
 * **RUN:** ejecuta comandos shell dentro del contenedor, hay que tener en cuenta el sistema operativo definido por el ***FROM***. No se puede hacer apt en CentOS, por ejemplo.
 * **WORKDIR:** posiciona la ejecución en un path determinado dentro del contenedor, mejor que hacer “RUN cd /opt”. Es buena práctica utilizar paths absolutos.
 * **USER:** se puede definir un usuario no root que exista dentro del contenedor, ya que por defecto, todos los comandos se ejecutarán con el usuario root.
 * **EXPOSE:** define un puerto donde el contenedor quedará escuchando peticiones. La buena práctica es mantener los puertos por defecto, por ejemplo, en nginx mantenemos el puerto 80 para que el usuario de la imagen pueda mapear de forma externa al puerto que considere.
 * **VOLUME:** define un path que el contenedor define para permitir montar volúmenes externos a fin de compartir información desde fuera hacia dentro. 
 * **CMD ["comando","arg","arg",...]:** Permite ejecutar comandos dentro del contenedor. Se puede sobreescribir desde un docker run.
-* **ENV:** permite definir variables de entorno que pueden ser utilizadas en el mismo Dockerfile y sobreescritas desde docker run con --env clave=’valor’. Se utiliza para definir versiones o paths que puedan cambiar de una construcción a otra.
-* **ENTRYPOINT:** se utiliza para establecer el comando principal de ejecución de la imagen. Solo se hace caso al último establecido en el Dockerfile. Permite su sobreescritura desde docker run. Suele utilizarse para ejecutar bash scripts que tienen que añadirse en la imagen.
+* **ENTRYPOINT:** se utiliza para establecer el comando principal de ejecución de la imagen. Permite su sobreescritura desde docker run. Suele utilizarse para ejecutar bash scripts que tienen que añadirse en la imagen.
 
 #### Ejemplo para proyecto Java con Maven
 
@@ -236,26 +236,50 @@ server {
 
 > **Nota**: Ejecutar en el directorio donde se almacena el fichero Dockerfile
 
-Una vez tenemos definida nuestra receta es el momento de contruir la imagen, para lo cual en el mismo ditectorio donde esté el fichero Dockerfile, vamos a ejecutar:
+Como ejemplo sencillo, vamos a crear dentro de nuestro directorio un fichero index.js con el siguiente contenido:
+
+```javascript
+var os = require("os");
+var hostname = os.hostname();
+console.log("Hola desde " + hostname);
+``` 
+
+Para poder ejecutar este fichero de JavaScript del lado del servidor necesitamos un runtime de nodejs, por ello, vamos a partir de un sistema operativo **alpine**, donde vamos a instalar todo lo necesario, copiamos el fichero **index.js** y lo ejecutamos con nodejs:
+
+```dockerfile
+FROM alpine
+RUN apk update && apk adk nodejs
+COPY . /app
+WORKDIR /app
+CMD ["node","index.js"]
+```
+
+Una vez tenemos definida nuestra receta es el momento de contruir la imagen, para lo cual en el mismo directorio donde esté el fichero Dockerfile, vamos a ejecutar:
 
 ```bash
-$> docker build -t nombre_imagen:version .
+docker build -t docker-workshop:1.0 .
 ```
 
 Esto nos va a permitir poder ejecutar la imagen y crear distintos contenedores para probar su funcionamiento en local:
 
 ```bash
-$> docker run -d nombre_imagen:version
+docker run docker-workshop:1.0
+```
+
+En caso de haberlo hecho previamente tenemos que taggear la imagen anteponiendo nuestro nombre de usuario de Docker Hub.
+
+```bash
+docker tag docker-workshop:1.0 tu-usuario/docker-workshop:1.0
 ```
 
 Una vez probada es momento de subirlo a nuestro repositorio en docker hub. Para ello primero tenemos que logarnos:
 
 ```bash
-$> docker login -U USER -p PASS
+docker login -U USER -p PASS
 ```
 
-Una vez logados podemos subir nuestras imágenes a compartir con el comando:
+Una vez logados podemos subir nuestras imágenes para compartir con el comando:
 
 ```bash
-$> docker push nombre_imagen:version
+docker push tu-usuario/docker-workshop:1.0
 ```
