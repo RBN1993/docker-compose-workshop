@@ -1,0 +1,70 @@
+version: "3.3"
+# Prefijo identificador de los contenedores, ideal para evitar entrar en conflicto con otros servicios
+# que puedan llamarse igual a los servicios definidos en este archivo
+name: MyDockerComposeFile
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: db
+      MYSQL_DATABASE: db
+      MYSQL_USER: db
+      MYSQL_PASSWORD: db
+    networks:
+      - mynetwork
+  devops-db-app:
+    build:
+      context: devops-db-app
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      # Para que no se levante/ejecute hasta que no esté activo el servicio
+      # de base de datos 
+      # db:
+      #   condition: service_healthy
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_PASSWORD: db
+      # Indicamos que debe conectarse al servicio interno, y este se llama db
+      DATABASE_HOST: db
+      # Al configurar el servicio tenemos que utilizar los puertos internos
+      # para que se conecten entre ellos
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: db
+      DATABASE_NAME: db
+    networks:
+      - mynetwork
+  devops-app:
+    build:
+      context: devops-app
+      dockerfile: Dockerfile
+    ports:
+      - "3001:8080"
+    restart: always
+    networks:
+      - mynetwork
+
+  devops-web:
+    build:
+      context: devops-web
+      dockerfile: Dockerfile
+    # Esperamos que se levante primero 
+    depends_on:
+      - devops-db-app
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - mynetwork
+# Podríamos indicar una ruta externa distinta pero no hace falta
+volumes:
+  mysql_data:
+networks:
+  mynetwork:

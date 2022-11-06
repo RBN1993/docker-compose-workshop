@@ -25,3 +25,16 @@ Y, por supuesto, Docker y Docker Compose. Sea cual sea tu sistema operativo la f
 - [Docker Compose](docs/03-docker-compose.md)
 - [Caso Práctico de Orquestación](docs/04-caso-practico-orquestacion.md)
 
+## Resumen y notas importantes
+
+- Docker es un sistema de virtualización ligero que facilita empaquetar aplicaciones en contenedores.
+
+- En el Dockerfile hay que colocar siempre una versión y nunca usar latest
+
+#### ELIMINA TODO MENOS LOS VOLUMENES:
+
+`docker-compose down`
+
+#### ELIMINA TODO INCLUSO VOLUMENES:
+
+`docker-compose down -v`
